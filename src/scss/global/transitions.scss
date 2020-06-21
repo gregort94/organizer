@@ -1,0 +1,24 @@
+.fade {
+   &-enter {
+      transform: translateY(-100%);
+   }
+   &-enter-active {
+      transition: all 1s;
+   }
+   &-leave-active {
+      transition: all 1s;
+      transform: translateY(-100%);
+   }
+}
+.soft {
+   &-enter {
+      opacity: 0;
+   }
+   &-enter-active {
+      transition: opacity 300ms;
+   }
+   &-leave-active {
+      transition: opacity 300ms;
+      opacity: 0;
+   }
+}
