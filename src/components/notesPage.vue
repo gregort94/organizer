@@ -1,8 +1,8 @@
 <template>
-  <div class="notesPage">
+  <div class="notes">
     <header class="header">
       <div class="container">
-        <a @click="addNoteHandler" class="header__add">
+        <a @click="addNoteHandler" class="header-add">
           <svg
             version="1.1"
             id="Capa_1"
@@ -36,9 +36,9 @@
         </a>
       </div>
     </header>
-    <section class="notes">
-      <ul class="notes__body">
-        <li v-for="(note, index) in notesData" :key="index" class="notes__note note">
+    <section class="body">
+      <ul class="notes-list">
+        <li v-for="(note, index) in notesData" :key="index" class="note">
           <transition name="fade">
             <confirm-window
               v-show="deletingNote === note"
@@ -49,23 +49,23 @@
               ]"
             ></confirm-window>
           </transition>
-          <h2 class="note__title">{{note.title}}</h2>
-          <ul class="note__list">
-            <li v-for="(value, index) in note.todos" :key="index" class="note__item">
-              <div class="note__item-status">
-                <div class="note__item-img">
+          <h2 class="note-title">{{note.title}}</h2>
+          <ul class="note-list">
+            <li v-for="(value, index) in note.todos" :key="index" class="todo">
+              <div class="todo-status">
+                <div class="todo-img">
                   <img v-if="value.done" class="fitImg" src="@/assets/img/icons/done.svg" alt />
                   <img else class="fitImg" src="@/assets/img/icons/process.svg" alt />
                 </div>
               </div>
-              <p class="note__item-text">{{value.text}}</p>
+              <p class="todo-text">{{value.text}}</p>
             </li>
           </ul>
-          <div class="note__menu">
-            <button @click="setEditingNote(note)" class="note__menu-item">
+          <div class="note-menu">
+            <button @click="setEditingNote(note)" class="note-menu-item">
               <img src="@/assets/img/icons/edit.svg" alt="edit" class="fitImg" />
             </button>
-            <button @click="setDeletingNote(note)" class="note__menu-item note__menu-item--remove">
+            <button @click="setDeletingNote(note)" class="note-menu-item note-menu-item--remove">
               <img src="@/assets/img/icons/remove.svg" alt="remove" class="fitImg" />
             </button>
           </div>
@@ -73,7 +73,7 @@
       </ul>
     </section>
     <transition name="soft">
-      <note v-if="editingNote" :sourceData="editingNote"></note>
+      <open-note v-if="editingNote" :sourceData="editingNote"></open-note>
     </transition>
   </div>
 </template>
@@ -83,11 +83,11 @@ import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 import { mapActions } from "vuex";
 import ConfirmWindow from "./ConfirmWindow";
-import Note from "./Note";
+import OpenNote from "./OpenNote";
 export default {
   components: {
     ConfirmWindow,
-    Note
+    OpenNote
   },
   data() {
     return {};
@@ -124,13 +124,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
 $addBtnFill: #22b4b4;
+.notes {
+  padding: 50px 0px 0px 0px;
+}
 .header {
   padding: 15px;
-  &__add {
+  &-add {
     color: white;
     position: relative;
     width: 50px;
@@ -148,25 +151,12 @@ $addBtnFill: #22b4b4;
     }
   }
 }
-.notes {
-  &__body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    grid-template-rows: repeat(auto-fill, 300px);
-    grid-gap: 15px;
-    justify-content: space-around;
-  }
-  &__note {
-    &:nth-child(3n) {
-      background-color: $noteBG1;
-    }
-    &:nth-child(3n + 1) {
-      background-color: $noteBG2;
-    }
-    &:nth-child(3n-1) {
-      background-color: $noteBG3;
-    }
-  }
+.notes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  grid-template-rows: repeat(auto-fill, 300px);
+  grid-gap: 15px;
+  justify-content: space-around;
 }
 .note {
   position: relative;
@@ -174,52 +164,51 @@ $addBtnFill: #22b4b4;
   background-color: $noteBG1;
   padding: 15px;
   border-radius: 1px;
-  &__title {
-    font-size: 30px;
-    text-align: center;
-  }
-
-  &__list {
-  }
-
-  &__item {
-    display: flex;
-  }
-
-  &__item-status {
-  }
-  &__item-img {
-    position: relative;
-    width: 25px;
-    height: 25px;
-    margin: 0px 5px 5px 0px;
-  }
-  &__item-text {
-    overflow: hidden;
-    @include unusual;
-  }
-  &__menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    background-color: rgba(7, 7, 7, 0.452);
-    display: none;
-    border-radius: 0 0 0 5px;
-  }
-  &__menu-item {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    margin: 5px;
-    padding: 0;
-    &:hover {
-    }
-  }
   &:hover {
-    .note__menu {
+    .note-menu {
       display: block;
     }
   }
+  &:nth-child(3n) {
+    background-color: $noteBG1;
+  }
+  &:nth-child(3n + 1) {
+    background-color: $noteBG2;
+  }
+  &:nth-child(3n-1) {
+    background-color: $noteBG3;
+  }
+}
+.note-title {
+  font-size: 30px;
+  text-align: center;
+}
+.note-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(7, 7, 7, 0.452);
+  display: none;
+  border-radius: 0 0 0 5px;
+}
+.note-menu-item {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  padding: 0;
+}
+.todo {
+  display: flex;
+}
+.todo-img {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  margin: 0px 5px 5px 0px;
+}
+.todo-text {
+  overflow: hidden;
+  @include unusual;
 }
 </style>

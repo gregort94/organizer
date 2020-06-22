@@ -1,7 +1,7 @@
 <template>
   <section class="finder">
-    <input v-model="value" type="text" class="finder__input" />
-    <p v-show="nothingFind" class="finder__message">Nothing find</p>
+    <input v-model="value" type="text" class="input" />
+    <p v-show="nothingFind" class="message">Nothing find</p>
   </section>
 </template>
 
@@ -56,10 +56,11 @@ export default {
   z-index: 99;
   border-radius: 2px;
   width: 500px;
-  &__input {
+  .input {
     width: 100%;
+    background-color: #fff;
   }
-  &__message {
+  .message {
     position: absolute;
     bottom: 0;
     left: 50%;

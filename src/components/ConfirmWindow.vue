@@ -1,15 +1,15 @@
 <template>
   <div class="confirmWindow">
-    <p class="confirmWindow__text">{{text}}</p>
+    <p class="text">{{text}}</p>
     <button
       v-for="(button, index) in buttons"
       @click="button.handler()"
       :class="btnClasses[button.type]"
       :key="index"
-      class="confirmWindow__btn"
+      class="btn"
       type="button"
     >{{button.name}}</button>
-    <button @click="$emit('cancel')" class="confirmWindow__btn--cancel">Cancel</button>
+    <button @click="$emit('cancel')" class="btn btn--cancel">Cancel</button>
   </div>
 </template>
 
@@ -22,9 +22,9 @@ export default {
   data() {
     return {
       btnClasses: {
-        danger: "confirmWindow__btn--danger",
-        change: "confirmWindow__btn--warning",
-        close: "confirmWindow__btn--warning"
+        danger: "btn--danger",
+        change: "btn--warning",
+        close: "btn--warning"
       }
     };
   }
@@ -32,22 +32,24 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style scoped lang="scss">
 .confirmWindow {
   display: flex;
   background-color: rgb(49, 49, 49);
-  padding: 15px;
+  padding: 10px 15px;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   color: #fff;
   z-index: 100;
-  &__text {
+  align-items: center;
+  .text {
     flex: 1 0 0;
   }
-  &__btn {
+  .btn {
     border-radius: 3px;
+    margin-left: 5px;
     &--cancel {
       color: #fff;
       background-color: #6c757d;

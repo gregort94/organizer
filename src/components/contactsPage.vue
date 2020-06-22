@@ -7,12 +7,12 @@
       ref="finder"
     ></finder>
     <section class="contacts">
-      <div class="contacts__logout"></div>
+      <div class="logout"></div>
       <div class="container">
         <template v-if="filteredData">
-          <div :key="i" v-for="(letter, i) in existingLetters" class="contacts__block">
-            <div class="contacts__letter" :id="letter">{{letter}}</div>
-            <ul class="contacts__list">
+          <div :key="i" v-for="(letter, i) in existingLetters" class="block">
+            <div class="letter" :id="letter">{{letter}}</div>
+            <ul class="list">
               <contact
                 v-for="(value, key) in filterContactsByLetter(letter)"
                 :key="key"
@@ -95,13 +95,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../scss/global/variables.scss";
 .contacts {
   background-color: $background;
   padding: 50px 0px 0px 0px;
   min-height: 100vh;
-  &__block {
+  .block {
     padding: 15px 0px 15px 50px;
     border-bottom: 2px solid black;
     position: relative;
@@ -112,7 +112,7 @@ export default {
       padding: 30px 0px 15px 0px;
     }
   }
-  &__list {
+  .list {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: 100px;
@@ -124,7 +124,7 @@ export default {
       grid-template-columns: 1fr;
     }
   }
-  &__logout {
+  .logout {
     position: fixed;
     top: 15px;
     right: 15px;
@@ -133,7 +133,7 @@ export default {
       top: 50px;
     }
   }
-  &__letter {
+  .letter {
     width: 50px;
     height: 50px;
     position: absolute;

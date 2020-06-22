@@ -5,19 +5,19 @@
     :class="{'contact--favorite':contactData.favorite}"
     tabindex="0"
   >
-    <div class="contact__avatar">
-      <img :src="contactData.avatar" alt="avatar" class="fitImg contact__avatar-img" />
+    <div class="avatar">
+      <img :src="contactData.avatar" alt="avatar" class="fitImg avatar-img" />
     </div>
-    <div class="contact__info">
-      <p class="contact__name">{{contactData.name}}</p>
-      <div class="contact__optional">
-        <p class="contact__phone">
-          <span class="contact__phone-number">{{contactData.phone}}</span>
-          <a :href="`tel:${contactData.phone}`" @click.stop class="contact__phone-link">
-            <img class="contact__phone-icon" src="@/assets/img/icons/phone.svg" alt />
+    <div class="info">
+      <p class="name">{{contactData.name}}</p>
+      <div class="optional">
+        <p class="phone">
+          <span class="phone-number">{{contactData.phone}}</span>
+          <a :href="`tel:${contactData.phone}`" @click.stop class="phone-link">
+            <img class="phone-icon" src="@/assets/img/icons/phone.svg" alt />
           </a>
         </p>
-        <p class="contact__email">{{contactData.email}}</p>
+        <p class="email">{{contactData.email}}</p>
       </div>
     </div>
   </li>
@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
 .contact {
@@ -52,7 +52,15 @@ export default {
   border-radius: 10px;
   overflow: auto;
   cursor: pointer;
-  &__avatar {
+  &--favorite {
+    .avatar {
+      border: 5px solid $favoriteAvatarBorder;
+    }
+  }
+  @media (max-width: $xs) {
+    padding: 15px 50px 15px 5px;
+  }
+  .avatar {
     flex-grow: 0;
     flex: 0 0 70px;
     height: 70px;
@@ -62,51 +70,41 @@ export default {
     align-self: center;
     position: relative;
   }
-  &__info {
+  .info {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     justify-content: space-between;
   }
-  &__name {
+  .name {
     @include bold();
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  &__phone {
+  .phone {
     display: block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  &__phone-link {
+  .phone-link {
     position: absolute;
     right: 0;
     top: 50%;
     transform: translate(-10px, -50%);
-
-    &:hover .contact__phone-icon {
+    &:hover .phone-icon {
       filter: invert(1);
     }
-    &:focus .contact__phone-icon {
+    &:focus .phone-icon {
       filter: invert(1);
     }
   }
-
-  &__email {
+  .email {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 13px;
-  }
-  &--favorite {
-    .contact__avatar {
-      border: 5px solid $favoriteAvatarBorder;
-    }
-  }
-  @media (max-width: $xs) {
-    padding: 15px 50px 15px 5px;
   }
 }
 </style>

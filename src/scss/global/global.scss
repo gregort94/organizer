@@ -6,10 +6,10 @@ html {
 a {
   text-decoration: none;
   &:hover {
-    color: #00A9D3;
+    color: $hoverLink;
   }
   &:active {
-    color: #046675;
+    color: $activeLink;
   }
 }
 h2 {

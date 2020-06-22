@@ -1,12 +1,8 @@
 <template>
   <aside class="letters">
-    <ul class="letters__list">
-      <li class="letters__item" v-for="(value, letter) in alphabetObject" :key="letter">
-        <a
-          :href="`#${letter}`"
-          class="letters__link"
-          :class="{'letters__link--existing': value}"
-        >{{letter}}</a>
+    <ul class="list">
+      <li class="item" v-for="(value, letter) in alphabetObject" :key="letter">
+        <a :href="`#${letter}`" class="link" :class="{'link--existing': value}">{{letter}}</a>
       </li>
     </ul>
   </aside>
@@ -46,7 +42,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
 .letters {
@@ -55,20 +51,21 @@ export default {
   top: 0;
   right: 0;
   padding: 15px 0 0 0;
+  z-index: 100;
   @media (max-width: $xs) {
     padding: 45px 0 0 0;
   }
-  &__list {
+  .list {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 30px;
   }
-  &__item {
+  .item {
     flex-grow: 1;
     text-align: center;
   }
-  &__link {
+  .link {
     display: block;
     width: 100%;
     height: 100%;
