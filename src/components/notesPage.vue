@@ -187,7 +187,7 @@ $addBtnFill: #22b4b4;
   position: absolute;
   top: 0;
   right: 0;
-  background-color: rgba(7, 7, 7, 0.452);
+  background-color: transparent;
   display: none;
   border-radius: 0 0 0 5px;
 }
@@ -197,6 +197,14 @@ $addBtnFill: #22b4b4;
   height: 30px;
   margin: 5px;
   padding: 0;
+  background: transparent;
+  border: 0;
+  img {
+    filter: invert(0.2);
+  }
+  &:hover img {
+    filter: invert(0);
+  }
 }
 .todo {
   display: flex;
