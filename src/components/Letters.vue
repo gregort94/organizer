@@ -50,11 +50,8 @@ export default {
   height: 100%;
   top: 0;
   right: 0;
-  padding: 15px 0 0 0;
-  z-index: 100;
-  @media (max-width: $xs) {
-    padding: 45px 0 0 0;
-  }
+  padding: 60px 0 0 0;
+  z-index: 1;
   .list {
     display: flex;
     flex-direction: column;

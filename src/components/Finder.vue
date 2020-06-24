@@ -46,16 +46,16 @@ export default {
 @import "../scss/global/variables.scss";
 .finder {
   position: fixed;
-  top: 0;
+  top: 55px;
   left: 50%;
   transform: translate(-50%, 0);
   padding: 5px;
   display: flex;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
   border-radius: 2px;
   width: 500px;
+  z-index: 1;
   .input {
     width: 100%;
     background-color: #fff;
@@ -74,7 +74,7 @@ export default {
   @media (max-width: $xs) {
     left: 0;
     transform: translate(0, 0);
-    width: 100%;
+    width: calc(100% - 30px);
     margin: 0px 15px 0px 0px;
   }
 }

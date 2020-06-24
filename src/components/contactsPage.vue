@@ -1,5 +1,5 @@
 <template>
-  <div id="contacts">
+  <div class="contactsPage">
     <finder
       @filtered="filteredData = $event"
       v-if="contactsData"
@@ -7,8 +7,7 @@
       ref="finder"
     ></finder>
     <section class="contacts">
-      <div class="logout"></div>
-      <div class="container">
+      <div class="container container--contacts">
         <template v-if="filteredData">
           <div :key="i" v-for="(letter, i) in existingLetters" class="block">
             <div class="letter" :id="letter">{{letter}}</div>
@@ -97,59 +96,47 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
+.contactsPage {
+}
 .contacts {
   background-color: $background;
   padding: 50px 0px 0px 0px;
   min-height: 100vh;
-  .block {
-    padding: 15px 0px 15px 50px;
-    border-bottom: 2px solid black;
-    position: relative;
-    @media (max-width: $sm) {
-      margin-right: 31px;
-    }
-    @media (max-width: $xs) {
-      padding: 30px 0px 15px 0px;
-    }
+}
+.block {
+  padding: 15px 0px 15px 50px;
+  border-bottom: 2px solid black;
+  position: relative;
+
+  @media (max-width: $xs) {
+    padding: 30px 0px 15px 0px;
   }
-  .list {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 100px;
-    grid-gap: 15px;
-    @media (max-width: $lg) {
-      grid-template-columns: 1fr 1fr;
-    }
-    @media (max-width: $sm) {
-      grid-template-columns: 1fr;
-    }
+}
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-auto-rows: 100px;
+  grid-gap: 15px;
+  @media (max-width: 530px) {
+    grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
   }
-  .logout {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 100;
-    @media (max-width: $xs) {
-      top: 50px;
-    }
-  }
-  .letter {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    top: 50px;
-    transform: translate(0, -50%);
-    font-size: 50px;
-    line-height: 50px;
-    @media (max-width: $xs) {
-      top: 0;
-      font-size: 25px;
-      transform: translate(0, 0);
-      width: 25px;
-      height: 25px;
-      line-height: 25px;
-    }
+}
+.letter {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  top: 50px;
+  transform: translate(0, -50%);
+  font-size: 50px;
+  line-height: 50px;
+  @media (max-width: $xs) {
+    top: 0;
+    font-size: 25px;
+    transform: translate(0, 0);
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
   }
 }
 </style>
