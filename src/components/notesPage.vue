@@ -132,15 +132,16 @@ export default {
 .notes-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
-  grid-template-rows: repeat(auto-fill, 300px);
+  grid-auto-rows: 300px;
   grid-gap: 15px;
   justify-content: space-around;
 }
 .note {
   position: relative;
   overflow: hidden;
-  background-color: $noteBG1;
-  padding: 15px;
+  background: transparent url("../assets/img/note1.png") center/contain
+    no-repeat;
+  padding: 15px 15px 15px 20px;
   border-radius: 1px;
   &:hover {
     .note-menu {
@@ -148,18 +149,23 @@ export default {
     }
   }
   &:nth-child(3n) {
-    background-color: $noteBG1;
+    background: transparent url("../assets/img/note1.png") center/contain
+      no-repeat;
   }
   &:nth-child(3n + 1) {
-    background-color: $noteBG2;
+    background: transparent url("../assets/img/note2.png") center/contain
+      no-repeat;
   }
   &:nth-child(3n-1) {
-    background-color: $noteBG3;
+    background: transparent url("../assets/img/note3.png") center/contain
+      no-repeat;
   }
 }
 .note-title {
   font-size: 30px;
   text-align: center;
+  height: 45px;
+  line-height: 1;
 }
 .note-menu {
   position: absolute;

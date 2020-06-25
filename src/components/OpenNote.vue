@@ -1,11 +1,11 @@
 <template>
-  <section @click.self="closeWinActive = true" class="openNote overlay">
-    <a @click="closeWinActive = true" type="button" class="close">
+  <section @click.self="closeNotePage" class="openNote overlay">
+    <a @click="closeNotePage" type="button" class="close">
       <svg class="fitImg">
         <use xlink:href="@/assets/img/sprite.svg#back" />
       </svg>
     </a>
-    <form @submit.prevent="saveChangesHandler" class="body">
+    <form @submit.prevent="saveChanges" class="note">
       <transition name="fade">
         <confirm-window
           v-show="deletingNote"
@@ -18,15 +18,16 @@
       </transition>
       <transition name="fade">
         <confirm-window
-          v-show="closeWinActive"
-          @cancel="closeWinActive = false"
-          text="Close note ?"
+          v-show="saveWinActive"
+          @cancel="saveWinActive = false"
+          text="Save changes ?"
           :buttons="[
-              {name: 'Close', type: 'close', handler: closeNotePage}
+              {name: 'Yes', type: 'success', handler: closeWithSave},
+              {name: 'No', type: 'danger', handler: closeWithoutSave},
             ]"
         ></confirm-window>
       </transition>
-      <button :disabled="!changed" class="btn btn--success save">Save</button>
+      <!-- <button :disabled="!changed" class="btn btn--success save">Save</button>
       <button
         @click="setDeletingNote(sourceData)"
         type="button"
@@ -36,34 +37,36 @@
         :disabled="!changed"
         @click="copySourceData"
         class="btn btn--info cancel"
-      >Cancel changes</button>
+      >Cancel changes</button>-->
       <div class="title">
         <input type="text" v-model="currentData.title" placeholder="set title" class="title-input" />
       </div>
-      <ul class="list">
-        <li v-for="(todo, index) in currentData.todos" :key="index" class="todo">
-          <div class="checkbox">
-            <input
-              :id="`todoCheck${index}`"
-              class="input checkbox__control"
-              v-model="todo.done"
-              type="checkbox"
-            />
-            <label :for="`todoCheck${index}`" class="checkbox__label"></label>
-          </div>
-          <input ref="input" required v-model="todo.text" type="text" class="input todo-text" />
-          <button type="button" @click="currentData.todos.splice(index, 1)" class="todo-delete">
-            <svg class="fitImg">
-              <use xlink:href="@/assets/img/sprite.svg#remove" />
-            </svg>
-          </button>
-        </li>
-      </ul>
-      <a @click="addTodo" class="add">
-        <svg class="fitImg">
-          <use xlink:href="@/assets/img/sprite.svg#addTodo" />
-        </svg>
-      </a>
+      <div class="body">
+        <ul class="list">
+          <li v-for="(todo, index) in currentData.todos" :key="index" class="todo">
+            <div class="checkbox">
+              <input
+                :id="`todoCheck${index}`"
+                class="input checkbox__control"
+                v-model="todo.done"
+                type="checkbox"
+              />
+              <label :for="`todoCheck${index}`" class="checkbox__label"></label>
+            </div>
+            <input ref="input" required v-model="todo.text" type="text" class="input todo-text" />
+            <button type="button" @click="currentData.todos.splice(index, 1)" class="todo-delete">
+              <svg class="fitImg">
+                <use xlink:href="@/assets/img/sprite.svg#remove" />
+              </svg>
+            </button>
+          </li>
+        </ul>
+        <a @click="addTodo" class="add">
+          <svg class="fitImg">
+            <use xlink:href="@/assets/img/sprite.svg#addTodo" />
+          </svg>
+        </a>
+      </div>
     </form>
   </section>
 </template>
@@ -86,7 +89,8 @@ export default {
   data() {
     return {
       currentData: false,
-      closeWinActive: false
+      closeWinActive: false,
+      saveWinActive: false
     };
   },
   computed: {
@@ -107,7 +111,7 @@ export default {
       localStorageSync: "localStorageSync"
     }),
     ...mapActions("notes", { removeNoteHandler: "removeNoteHandler" }),
-    saveChangesHandler() {
+    saveChanges() {
       this.sourceData.title = this.currentData.title;
       this.sourceData.todos = JSON.parse(
         JSON.stringify(this.currentData.todos)
@@ -129,6 +133,17 @@ export default {
       this.currentData = JSON.parse(JSON.stringify(this.sourceData));
     },
     closeNotePage() {
+      if (this.changed) {
+        this.saveWinActive = true;
+      } else {
+        this.setEditingNote(false);
+      }
+    },
+    closeWithSave() {
+      this.saveChanges();
+      this.setEditingNote(false);
+    },
+    closeWithoutSave() {
       this.setEditingNote(false);
     }
   },
@@ -140,21 +155,21 @@ export default {
 </script>
 
 
-
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
+
 .openNote {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.body {
-  padding: 15px 15px 15px 15px;
+.note {
+  padding: 0;
   background-color: #fff;
-  width: 600px;
-  height: 600px;
-  background-color: $noteBG1;
+  width: 500px;
+  height: 550px;
+  background: $noteBgGradient;
   border-radius: 1px;
   position: relative;
   overflow: auto;
@@ -166,6 +181,9 @@ export default {
     width: 100%;
     height: 100%;
   }
+}
+.body {
+  padding: 15px;
 }
 .save {
   position: absolute;
@@ -188,11 +206,14 @@ export default {
 .title {
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 60px;
+  background-color: $noteHeaderBG;
   &-input {
     text-align: center;
-    height: 40px;
+    line-height: 60;
     border: 0;
-    background-color: $noteBG1;
+    background-color: transparent;
     font-size: 30px;
     @include bold;
     width: 280px;

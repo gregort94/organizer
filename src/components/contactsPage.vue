@@ -4,6 +4,7 @@
       @filtered="filteredData = $event"
       v-if="contactsData"
       :sourceData="contactsData"
+      filteredField="name"
       ref="finder"
     ></finder>
     <section class="contacts">
@@ -13,10 +14,10 @@
             <div class="letter" :id="letter">{{letter}}</div>
             <ul class="list">
               <contact
-                v-for="(value, key) in filterContactsByLetter(letter)"
-                :key="key"
-                :contact-data="value"
-                @open-profile="currentContact = $event"
+                v-for="(contact, index) in filterContactsByLetter(letter)"
+                :key="index"
+                :contact-data="contact"
+                @open-contact="currentContact = $event"
               ></contact>
             </ul>
           </div>
@@ -24,12 +25,12 @@
       </div>
     </section>
     <transition name="soft">
-      <profile
+      <openContact
         v-if="currentContact"
         @delete-contact="deleteContact($event)"
         @close="currentContact = false"
         :contact-data="currentContact"
-      ></profile>
+      ></openContact>
     </transition>
     <letters :existingLetters="existingLetters"></letters>
   </div>
@@ -38,14 +39,14 @@
 <script>
 import { trimLetters } from "../js/tools";
 import Contact from "./Contact";
-import Profile from "./Profile";
+import OpenContact from "./OpenContact";
 import Finder from "./Finder";
 import Letters from "./Letters";
 import { mapGetters } from "vuex";
 export default {
   components: {
     Contact,
-    Profile,
+    OpenContact,
     Finder,
     Letters
   },
@@ -96,11 +97,10 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
-.contactsPage {
-}
+
 .contacts {
   background-color: $background;
-  padding: 50px 0px 0px 0px;
+  padding: 90px 0px 0px 0px;
   min-height: 100vh;
 }
 .block {

@@ -8,7 +8,8 @@
 <script>
 export default {
   props: {
-    sourceData: Array
+    sourceData: Array,
+    filteredField: String
   },
   data() {
     return {
@@ -25,7 +26,7 @@ export default {
       this.dubouceId = setTimeout(() => {
         const filteredUsers = this.sourceData.filter(user => {
           const value = this.value.toLowerCase();
-          return user.name.toLowerCase().indexOf(value) + 1;
+          return user[this.filteredField].toLowerCase().indexOf(value) + 1;
         });
         this.$emit("filtered", filteredUsers);
         filteredUsers.length === 0

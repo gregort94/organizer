@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     contactClickHandler() {
-      this.$emit("open-profile", this.contactData);
+      this.$emit("open-contact", this.contactData);
     }
   },
   created() {}

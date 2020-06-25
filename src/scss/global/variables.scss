@@ -8,12 +8,14 @@ $xs: 576px;
 $hoverLink: #22b4b4;
 $activeLink: #046675;
 
-$noteBG1: #FCE68F;
+$noteBG1: rgba(255,239,135,1);
+$noteHeaderBG: #ffea85;
 $noteBG2: #D0CEDA;
 $noteBG3: #B7DECE;
+$noteBgGradient: linear-gradient(42deg, rgba(255,239,135,1) 0%, rgba(255,222,93,1) 57%, rgba(245,206,105,1) 100%);
 
 $background: #ffffff;
-$contactBG: #D36B6B;
+$contactBG: #B7DECE;
 $profileBG: #f9f6f5;
 $black: #000000;
 $desabled: #c9ccd0;

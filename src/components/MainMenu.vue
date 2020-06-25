@@ -30,7 +30,7 @@ export default {
 /* variables */
 $bourgerBreakpoint: $sm;
 $burgerColor: $black;
-$menuBG: crimson;
+$menuBG: $noteBG2;
 $linkColor: $black;
 $linkHoverColor: #00a9d3;
 $linkActiveColor: darken($linkHoverColor, 7%);

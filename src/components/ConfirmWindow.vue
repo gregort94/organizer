@@ -23,8 +23,8 @@ export default {
     return {
       btnClasses: {
         danger: "btn--danger",
-        change: "btn--warning",
-        close: "btn--warning"
+        warning: "btn--warning",
+        success: "btn--success"
       }
     };
   }
@@ -33,15 +33,27 @@ export default {
 
 
 <style scoped lang="scss">
+/* Variables */
+$windowBG: rgb(49, 49, 49);
+$windowText: #fff;
+$cancelBtnBG: #6c757d;
+$cancelBtnText: #fff;
+$dangerBtnBG: #dc3545;
+$dangerBtnText: #fff;
+$warningBtnBG: #ffc107;
+$warningBtnText: #212529;
+$successBtnBG: green;
+$successBtnText: white;
+
 .confirmWindow {
   display: flex;
-  background-color: rgb(49, 49, 49);
+  background-color: $windowBG;
   padding: 10px 15px;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  color: #fff;
+  color: $windowText;
   z-index: 100;
   align-items: center;
   .text {
@@ -51,33 +63,43 @@ export default {
     border-radius: 3px;
     margin-left: 5px;
     &--cancel {
-      color: #fff;
-      background-color: #6c757d;
-      border-color: #6c757d;
+      color: $cancelBtnText;
+      background-color: $cancelBtnBG;
+      border-color: $cancelBtnBG;
       &:hover {
-        color: #fff;
-        background-color: #5a6268;
-        border-color: #545b62;
+        color: $cancelBtnText;
+        background-color: darken($cancelBtnBG, 10%);
+        border-color: darken($cancelBtnBG, 10%);
       }
     }
     &--danger {
       color: #fff;
-      background-color: #dc3545;
-      border-color: #dc3545;
+      background-color: $dangerBtnBG;
+      border-color: $dangerBtnBG;
       &:hover {
         color: #fff;
-        background-color: #c82333;
-        border-color: #bd2130;
+        background-color: darken($dangerBtnBG, 10%);
+        border-color: darken($dangerBtnBG, 10%);
       }
     }
     &--warning {
-      color: #212529;
-      background-color: #ffc107;
-      border-color: #ffc107;
+      color: $warningBtnText;
+      background-color: $warningBtnBG;
+      border-color: $warningBtnBG;
       &:hover {
-        color: #212529;
-        background-color: #e0a800;
-        border-color: #d39e00;
+        color: $warningBtnText;
+        background-color: darken($warningBtnBG, 10%);
+        border-color: darken($warningBtnBG, 10%);
+      }
+    }
+    &--success {
+      color: $successBtnText;
+      background-color: $successBtnBG;
+      border-color: $successBtnBG;
+      &:hover {
+        color: $successBtnText;
+        background-color: darken($successBtnBG, 10%);
+        border-color: darken($successBtnBG, 10%);
       }
     }
   }

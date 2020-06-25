@@ -1,14 +1,47 @@
 <template>
-  <div class="profile overlay" @click.self="$emit('close')">
+  <div class="openContact overlay" @click.self="closeNotePage">
     <form @submit.prevent="saveChange" class="form">
+      <transition name="fade">
+        <confirm-window
+          v-show="deleteWinActive"
+          @cancel="deleteWinActive = false"
+          text="Confirm remove"
+          :buttons="[
+              {name: 'Yes', type: 'danger', handler: deleteContact},
+            ]"
+        ></confirm-window>
+      </transition>
+      <transition name="fade">
+        <confirm-window
+          v-show="saveWinActive"
+          @cancel="saveWinActive = false"
+          text="Save changes ?"
+          :buttons="[
+              {name: 'Yes', type: 'success', handler: closeWithSave},
+              {name: 'No', type: 'danger', handler: closeWithoutSave},
+            ]"
+        ></confirm-window>
+      </transition>
       <div class="top">
         <div class="avatar">
           <img class="fitImg" alt :src="contactData.avatar" />
         </div>
+        <button @click="closeNotePage" type="button" class="button button--close">
+          <img src="@/assets/img/icons/close.svg" alt="close" class="fitImg" />
+        </button>
+        <button @click="deleteWinActive = true" type="button" class="button button--delete">
+          <img src="@/assets/img/icons/remove.svg" alt="delete" class="fitImg" />
+        </button>
+        <button @click="editClickHandler" type="button" class="button button--edit">
+          <svg class="fitImg">
+            <use xlink:href="@/assets/img/sprite.svg#edit" />
+          </svg>
+        </button>
         <div class="favorite">
           <input
             ref="favorite"
             id="favorite"
+            :disabled="!changed"
             type="checkbox"
             class="inputControl favorite-input"
             :checked="contactData.favorite"
@@ -17,53 +50,39 @@
             <img src="@/assets/img/icons/star.svg" alt="favorite" />
           </label>
         </div>
-        <button @click="$emit('close')" type="button" class="button button--close">
-          <img src="@/assets/img/icons/close.svg" alt="close" class="fitImg" />
-        </button>
-        <button
-          @click="$emit('delete-contact', contactData.id)"
-          type="button"
-          class="button button--delete"
-        >
-          <img src="@/assets/img/icons/remove.svg" alt="delete" class="fitImg" />
-        </button>
-        <button type="submit" class="button button--save">
-          <img src="@/assets/img/icons/save.svg" alt="save" class="fitImg" />
-        </button>
-        <div ref="saveMessage" class="message">Saved !</div>
       </div>
       <div class="bottom">
         <div
-          v-for="(name, index) in basicInputs"
-          :key="index"
+          v-for="(value, name) in basicInputsControls"
+          :key="name"
           :class="['fieldset', `fieldset--${name}`]"
         >
           <label :for="name" class="label">{{name}}</label>
           <input
             required
-            class="input input"
-            :ref="name"
+            :disabled="!changed"
+            class="input input--switchable"
             :id="name"
             type="text"
-            :value="contactData[name]"
+            v-model="basicInputsControls[name]"
             @input="checkNameValidity"
           />
         </div>
         <fieldset class="address">
           <legend>address</legend>
           <div
-            v-for="(name, index) in adressInputs"
-            :key="index"
+            v-for="(value, name) in addressInputsControls"
+            :key="name"
             :class="['fieldset', `fieldset--${name}`]"
           >
             <label :for="name" class="label">{{name}}</label>
             <input
               required
-              class="input input"
-              :ref="name"
+              :disabled="!changed"
+              class="input input--switchable"
               :id="name"
               type="text"
-              :value="contactData.address[name]"
+              v-model="addressInputsControls[name]"
               @input="checkNameValidity"
             />
           </div>
@@ -75,30 +94,34 @@
 
 
 <script>
+import ConfirmWindow from "./ConfirmWindow";
 export default {
+  components: {
+    ConfirmWindow
+  },
   props: ["contactData"],
   data() {
     return {
       basicInputs: ["name", "phone", "email"],
-      adressInputs: ["country", "state", "city"]
+      addressInputs: ["country", "state", "city"],
+      basicInputsControls: {},
+      addressInputsControls: {},
+      deleteWinActive: false,
+      saveWinActive: false,
+      changed: false
     };
   },
   methods: {
-    saveChange() {
+    saveChanges() {
       this.basicInputs.forEach(inputName => {
-        this.contactData[inputName] = this.$refs[inputName][0].value;
+        this.contactData[inputName] = this.basicInputsControls[inputName];
       });
-      this.adressInputs.forEach(inputName => {
-        this.contactData.address[inputName] = this.$refs[inputName][0].value;
+      this.addressInputs.forEach(inputName => {
+        this.contactData.address[inputName] = this.basicInputsControls[
+          inputName
+        ];
       });
       this.contactData.favorite = this.$refs.favorite.checked;
-      this.showMessage();
-    },
-    showMessage() {
-      this.$refs.saveMessage.classList.add("message--visable");
-      setTimeout(() => {
-        this.$refs.saveMessage.classList.remove("message--visable");
-      }, 1000);
     },
     checkNameValidity(e) {
       const isValid = /^[A-Za-z0-9]+$/.test(e.target.value);
@@ -106,7 +129,42 @@ export default {
         e.target.value = "";
         e.target.placeholder = "enter in english please";
       }
+    },
+    closeNotePage() {
+      if (this.changed) {
+        this.saveWinActive = true;
+      } else {
+        this.$emit("close");
+      }
+    },
+    closeWithSave() {
+      this.saveChanges();
+      this.$emit("close");
+    },
+    closeWithoutSave() {
+      this.$emit("close");
+    },
+    editClickHandler() {
+      this.changed = true;
+      setTimeout(() => {
+        this.$refs.favorite.focus();
+      }, 100);
+    },
+    deleteContact() {
+      this.$emit("delete-contact", this.contactData.id);
     }
+  },
+  created() {
+    this.basicInputs.forEach(name => {
+      this.$set(this.basicInputsControls, name, this.contactData[name]);
+    });
+    this.addressInputs.forEach(name => {
+      this.$set(
+        this.addressInputsControls,
+        name,
+        this.contactData.address[name]
+      );
+    });
   }
 };
 </script>
@@ -123,6 +181,7 @@ export default {
   background-color: $profileBG;
   border-radius: 5px;
   animation-duration: 0.3s;
+  overflow: hidden;
   @media (max-width: $sm) {
     width: 100%;
     margin: 0;
@@ -158,10 +217,6 @@ export default {
 }
 .input {
   text-align: center;
-  font-style: italic;
-  &:disabled {
-    background-color: $desabled;
-  }
   &::placeholder {
     color: rgba(255, 2, 2, 0.726);
   }
@@ -199,7 +254,7 @@ export default {
   &:hover img {
     filter: invert(0);
   }
-  &--save {
+  &--edit {
     bottom: 0;
     right: 0;
   }
@@ -212,24 +267,18 @@ export default {
     right: 0;
   }
 }
-.message {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 100%);
-  background-color: rgba(15, 231, 116, 0.575);
-  padding: 5px 10px;
-  border-radius: 5px;
-  opacity: 0;
-  &--visable {
-    opacity: 1;
-  }
-}
 
 .favorite-input:focus + .favorite-label img {
-  outline: 5px auto -webkit-focus-ring-color;
+  outline: 0;
+  box-shadow: 0 0 2px 2px #609fcf;
 }
 .favorite-input:checked + .favorite-label img {
   filter: invert(0);
+}
+.favorite-input:disabled + .favorite-label img {
+  opacity: 0.5;
+}
+.favorite-input:disabled + .favorite-label:hover img {
+  filter: invert(0.5);
 }
 </style>
