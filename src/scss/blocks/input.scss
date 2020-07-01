@@ -3,7 +3,7 @@
    border: 0;
    border-bottom: 1px solid #000;
    &:focus {
-      border-bottom: 1px solid $hoverLink;
+      border-bottom: 1px solid $divider-color;
    }
    &:disabled {   
       // opacity: .5;

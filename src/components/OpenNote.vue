@@ -1,11 +1,11 @@
 <template>
-  <section @click.self="closeNotePage" class="openNote overlay">
-    <a @click="closeNotePage" type="button" class="close">
+  <section @click.self="closeWithSave" class="openNote overlay">
+    <a @click="closeWithSave" type="button" class="close">
       <svg class="fitImg">
         <use xlink:href="@/assets/img/sprite.svg#back" />
       </svg>
     </a>
-    <form @submit.prevent="saveChanges" class="note">
+    <form ref="form" class="note">
       <transition name="fade">
         <confirm-window
           v-show="deletingNote"
@@ -16,28 +16,6 @@
             ]"
         ></confirm-window>
       </transition>
-      <transition name="fade">
-        <confirm-window
-          v-show="saveWinActive"
-          @cancel="saveWinActive = false"
-          text="Save changes ?"
-          :buttons="[
-              {name: 'Yes', type: 'success', handler: closeWithSave},
-              {name: 'No', type: 'danger', handler: closeWithoutSave},
-            ]"
-        ></confirm-window>
-      </transition>
-      <!-- <button :disabled="!changed" class="btn btn--success save">Save</button>
-      <button
-        @click="setDeletingNote(sourceData)"
-        type="button"
-        class="btn btn--danger delete"
-      >Delete</button>
-      <button
-        :disabled="!changed"
-        @click="copySourceData"
-        class="btn btn--info cancel"
-      >Cancel changes</button>-->
       <div class="title">
         <input type="text" v-model="currentData.title" placeholder="set title" class="title-input" />
       </div>
@@ -53,7 +31,15 @@
               />
               <label :for="`todoCheck${index}`" class="checkbox__label"></label>
             </div>
-            <input ref="input" required v-model="todo.text" type="text" class="input todo-text" />
+            <input
+              @input="setValidityTrue"
+              ref="input"
+              v-model="todo.text"
+              type="text"
+              name="input"
+              autocomplete="off"
+              class="input todo-text"
+            />
             <button type="button" @click="currentData.todos.splice(index, 1)" class="todo-delete">
               <svg class="fitImg">
                 <use xlink:href="@/assets/img/sprite.svg#remove" />
@@ -61,11 +47,7 @@
             </button>
           </li>
         </ul>
-        <a @click="addTodo" class="add">
-          <svg class="fitImg">
-            <use xlink:href="@/assets/img/sprite.svg#addTodo" />
-          </svg>
-        </a>
+        <icon-btn @clicked="addTodo" hoverEffect="fill" spriteId="add" class="add"></icon-btn>
       </div>
     </form>
   </section>
@@ -79,9 +61,11 @@ import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 import { mapActions } from "vuex";
 import ConfirmWindow from "./ConfirmWindow";
+import IconBtn from "./IconBtn";
 export default {
   components: {
-    ConfirmWindow
+    ConfirmWindow,
+    IconBtn
   },
   props: {
     sourceData: Object
@@ -111,13 +95,6 @@ export default {
       localStorageSync: "localStorageSync"
     }),
     ...mapActions("notes", { removeNoteHandler: "removeNoteHandler" }),
-    saveChanges() {
-      this.sourceData.title = this.currentData.title;
-      this.sourceData.todos = JSON.parse(
-        JSON.stringify(this.currentData.todos)
-      );
-      this.localStorageSync();
-    },
     addTodo() {
       this.currentData.todos.push({ done: false, text: "" });
       setTimeout(() => {
@@ -132,19 +109,44 @@ export default {
     copySourceData() {
       this.currentData = JSON.parse(JSON.stringify(this.sourceData));
     },
-    closeNotePage() {
-      if (this.changed) {
-        this.saveWinActive = true;
+    closeNoteHandler() {
+      const isChanged =
+        JSON.stringify(this.sourceData) !== JSON.stringify(this.currentData);
+      if (isChanged) {
+        this.$refs.form.submit();
       } else {
         this.setEditingNote(false);
       }
     },
-    closeWithSave() {
-      this.saveChanges();
-      this.setEditingNote(false);
+    saveChanges() {
+      this.sourceData.title = this.currentData.title;
+      this.sourceData.todos = JSON.parse(
+        JSON.stringify(this.currentData.todos)
+      );
+      this.localStorageSync();
     },
-    closeWithoutSave() {
-      this.setEditingNote(false);
+    closeWithSave() {
+      if (this.formIsValid()) {
+        this.saveChanges();
+        this.setEditingNote(false);
+      } else {
+        console.log("invalid");
+      }
+    },
+    formIsValid() {
+      let isValid = true;
+      this.$refs.input.forEach(input => {
+        if (input.value === "") {
+          input.focus();
+          input.placeholder = "please fill in the field";
+          input.setCustomValidity("please fill in the field");
+          isValid = false;
+        }
+      });
+      return isValid;
+    },
+    setValidityTrue(e) {
+      e.target.setCustomValidity("");
     }
   },
   watch: {},
@@ -158,7 +160,9 @@ export default {
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
-
+$openNoteBgColor: $noteBgGradient;
+$openNoteHeaderBgColor: $noteHeaderBg;
+$closeBtnBg: $noteBg;
 .openNote {
   display: flex;
   align-items: center;
@@ -169,12 +173,12 @@ export default {
   background-color: #fff;
   width: 500px;
   height: 550px;
-  background: $noteBgGradient;
+  background: $openNoteBgColor;
   border-radius: 1px;
   position: relative;
   overflow: auto;
   @media (max-width: $xs) {
-    padding: 55px 15px 15px 15px;
+    padding: 0;
   }
   @media (max-width: $sm) {
     margin: 95px 0px 0px 0px;
@@ -208,7 +212,7 @@ export default {
   justify-content: center;
   width: 100%;
   height: 60px;
-  background-color: $noteHeaderBG;
+  background-color: $openNoteHeaderBgColor;
   &-input {
     text-align: center;
     line-height: 60;
@@ -223,27 +227,27 @@ export default {
   position: absolute;
   top: 15px;
   right: 15px;
-  padding: 10px;
   background-color: transparent;
   border-radius: 5px;
   width: 35px;
   height: 35px;
   cursor: pointer;
+  svg {
+    fill: $closeBtnBg;
+  }
   &:hover {
     svg {
-      fill: darken($noteBG1, 10%);
+      fill: darken($closeBtnBg, 10%);
     }
-  }
-  svg {
-    fill: $noteBG1;
   }
   @media (max-width: $sm) {
     top: 0;
     left: 0;
     width: 100%;
-    height: 47px;
+    height: 50px;
     border-bottom: 1px solid #000;
-    background-color: lighten($noteBG1, 10%);
+    background-color: lighten($closeBtnBg, 10%);
+    border-radius: 0;
     svg {
       height: 100%;
     }
@@ -251,24 +255,7 @@ export default {
 }
 .add {
   position: relative;
-  width: 30px;
-  height: 30px;
-  display: block;
-  cursor: pointer;
   margin: 15px 0px 0px 0px;
-  &:hover {
-    svg {
-      fill: darken($hoverLink, 10%);
-    }
-  }
-  &:active {
-    svg {
-      fill: darken($hoverLink, 20%);
-    }
-  }
-  svg {
-    fill: black;
-  }
 }
 .todo {
   margin: 10px 0px 10px 0px;
@@ -279,6 +266,16 @@ export default {
   flex: 1 0 0;
   background-color: transparent;
   @include unusual;
+  position: relative;
+  &::placeholder {
+    color: red;
+    @include reg;
+    font-size: 16px;
+    text-align: center;
+  }
+  &:invalid {
+    border-color: red;
+  }
 }
 .todo-delete {
   position: absolute;

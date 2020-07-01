@@ -14,7 +14,9 @@
         <p class="phone">
           <span class="phone-number">{{contactData.phone}}</span>
           <a :href="`tel:${contactData.phone}`" @click.stop class="phone-link">
-            <img class="phone-icon" src="@/assets/img/icons/phone.svg" alt />
+            <svg class="fitImg">
+              <use xlink:href="@/assets/img/sprite.svg#phone" />
+            </svg>
           </a>
         </p>
         <p class="email">{{contactData.email}}</p>
@@ -36,22 +38,28 @@ export default {
     contactClickHandler() {
       this.$emit("open-contact", this.contactData);
     }
-  },
-  created() {}
+  }
 };
 </script>
 
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
+$contactBg: $primary-color;
+$borderColor: $text-color-muddy;
+$favoriteAvatarBorder: $accent-color;
 .contact {
   display: flex;
-  background-color: $contactBG;
-  padding: 15px 50px 15px 15px;
+  background-color: $contactBg;
+  padding: 13px 50px 13px 15px;
   position: relative;
   border-radius: 10px;
   overflow: auto;
   cursor: pointer;
+  border: 2px solid $borderColor;
+  &:hover {
+    border-color: darken($borderColor, 40%);
+  }
   &--favorite {
     .avatar {
       border: 5px solid $favoriteAvatarBorder;
@@ -60,51 +68,50 @@ export default {
   @media (max-width: $xs) {
     padding: 15px 50px 15px 5px;
   }
-  .avatar {
-    flex-grow: 0;
-    flex: 0 0 70px;
-    height: 70px;
-    margin: 0px 10px 0px 0px;
-    border-radius: 50%;
-    overflow: hidden;
-    align-self: center;
-    position: relative;
+}
+.avatar {
+  flex-grow: 0;
+  flex: 0 0 70px;
+  height: 70px;
+  margin: 0px 10px 0px 0px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
+  position: relative;
+}
+.info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: space-between;
+}
+.name {
+  @include bold();
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.phone {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.phone-link {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-10px, -50%);
+  &:hover svg {
+    fill: #fff;
   }
-  .info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    justify-content: space-between;
-  }
-  .name {
-    @include bold();
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .phone {
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .phone-link {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(-10px, -50%);
-    &:hover .phone-icon {
-      filter: invert(1);
-    }
-    &:focus .phone-icon {
-      filter: invert(1);
-    }
-  }
-  .email {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 13px;
-  }
+}
+.email {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
 }
 </style>

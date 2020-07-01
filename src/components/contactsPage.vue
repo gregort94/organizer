@@ -97,9 +97,12 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
+$pageBg: $primary-color-light;
 
+.contactsPage {
+  background-color: $pageBg;
+}
 .contacts {
-  background-color: $background;
   padding: 90px 0px 0px 0px;
   min-height: 100vh;
 }

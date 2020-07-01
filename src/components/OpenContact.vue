@@ -1,6 +1,6 @@
 <template>
   <div class="openContact overlay" @click.self="closeNotePage">
-    <form @submit.prevent="saveChange" class="form">
+    <form @submit.prevent class="form">
       <transition name="fade">
         <confirm-window
           v-show="deleteWinActive"
@@ -26,17 +26,32 @@
         <div class="avatar">
           <img class="fitImg" alt :src="contactData.avatar" />
         </div>
-        <button @click="closeNotePage" type="button" class="button button--close">
-          <img src="@/assets/img/icons/close.svg" alt="close" class="fitImg" />
-        </button>
-        <button @click="deleteWinActive = true" type="button" class="button button--delete">
-          <img src="@/assets/img/icons/remove.svg" alt="delete" class="fitImg" />
-        </button>
-        <button @click="editClickHandler" type="button" class="button button--edit">
-          <svg class="fitImg">
-            <use xlink:href="@/assets/img/sprite.svg#edit" />
-          </svg>
-        </button>
+        <icon-btn
+          @clicked="deleteWinActive = true"
+          hoverEffect="bg"
+          width="40px"
+          height="40px"
+          spriteId="remove"
+          class="button button--delete"
+        ></icon-btn>
+        <icon-btn
+          @clicked="closeNotePage"
+          hoverEffect="bg"
+          width="40px"
+          height="40px"
+          spriteId="close"
+          class="button button--close"
+        ></icon-btn>
+        <icon-btn
+          @clicked="editClickHandler"
+          hoverEffect="bg"
+          spriteId="edit"
+          width="40px"
+          height="40px"
+          :disabled="changed"
+          :transparent="true"
+          class="button button--edit"
+        ></icon-btn>
         <div class="favorite">
           <input
             ref="favorite"
@@ -47,7 +62,9 @@
             :checked="contactData.favorite"
           />
           <label for="favorite" class="favorite-label">
-            <img src="@/assets/img/icons/star.svg" alt="favorite" />
+            <svg class="fitImg">
+              <use xlink:href="@/assets/img/sprite.svg#star" />
+            </svg>
           </label>
         </div>
       </div>
@@ -95,9 +112,11 @@
 
 <script>
 import ConfirmWindow from "./ConfirmWindow";
+import IconBtn from "./IconBtn";
 export default {
   components: {
-    ConfirmWindow
+    ConfirmWindow,
+    IconBtn
   },
   props: ["contactData"],
   data() {
@@ -172,13 +191,19 @@ export default {
 <style scoped lang="scss">
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
+$openContactBg: $primary-color-light;
+$text: $text-color-dark;
+$favoriteFill: $accent-color;
+$noFavoriteFill: $text-color-muddy;
+.openContact {
+  color: $text;
+}
 .form {
   margin: 50px auto;
-  background-color: #fff;
   position: relative;
   padding: 15px;
   width: 500px;
-  background-color: $profileBG;
+  background-color: $openContactBg;
   border-radius: 5px;
   animation-duration: 0.3s;
   overflow: hidden;
@@ -233,27 +258,14 @@ export default {
   width: 100%;
   height: 100%;
   display: block;
-  &:hover img {
-    filter: invert(0.4);
+  svg {
+    cursor: pointer;
+    fill: $noFavoriteFill;
+    transition: all 0.3s;
   }
-}
-.favorite-label img {
-  cursor: pointer;
-  filter: invert(0.5);
 }
 .button {
-  width: 35px;
-  height: 35px;
   position: absolute;
-  background-color: transparent;
-  padding: 0;
-  border: 0;
-  img {
-    filter: invert(0.2);
-  }
-  &:hover img {
-    filter: invert(0);
-  }
   &--edit {
     bottom: 0;
     right: 0;
@@ -268,17 +280,14 @@ export default {
   }
 }
 
-.favorite-input:focus + .favorite-label img {
+.favorite-input:focus + .favorite-label svg {
   outline: 0;
   box-shadow: 0 0 2px 2px #609fcf;
 }
-.favorite-input:checked + .favorite-label img {
-  filter: invert(0);
+.favorite-input:checked + .favorite-label svg {
+  fill: $favoriteFill;
 }
-.favorite-input:disabled + .favorite-label img {
-  opacity: 0.5;
-}
-.favorite-input:disabled + .favorite-label:hover img {
-  filter: invert(0.5);
+.favorite-input:disabled + .favorite-label svg {
+  opacity: 0.4;
 }
 </style>

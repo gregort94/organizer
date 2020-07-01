@@ -57,26 +57,26 @@ export default {
   border-radius: 2px;
   width: 500px;
   z-index: 1;
-  .input {
-    width: 100%;
-    background-color: #fff;
-  }
-  .message {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 130%);
-    font-size: 20px;
-    font-size: 20px;
-    &--hidden {
-      display: none;
-    }
-  }
   @media (max-width: $xs) {
     left: 0;
     transform: translate(0, 0);
     width: calc(100% - 30px);
     margin: 0px 15px 0px 0px;
+  }
+}
+.input {
+  width: 100%;
+  background-color: #fff;
+}
+.message {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 130%);
+  font-size: 20px;
+  font-size: 20px;
+  &--hidden {
+    display: none;
   }
 }
 </style>

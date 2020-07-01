@@ -5,13 +5,16 @@
     </button>
     <ul class="list" :class="{'open': menuOpen}">
       <li v-for="(url, name) in links" :key="name" class="list-item">
-        <router-link class="link" :to="url">{{name.toUpperCase()}}</router-link>
+        <router-link class="link" :to="url">
+          <span>{{name.toUpperCase()}}</span>
+        </router-link>
       </li>
     </ul>
   </nav>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: {
     links: Object
@@ -20,6 +23,9 @@ export default {
     return {
       menuOpen: false
     };
+  },
+  computed: {
+    ...mapGetters(["pageColor"])
   }
 };
 </script>
@@ -29,12 +35,10 @@ export default {
 @import "../scss/global/mixins.scss";
 /* variables */
 $bourgerBreakpoint: $sm;
-$burgerColor: $black;
-$menuBG: $noteBG2;
-$linkColor: $black;
-$linkHoverColor: #00a9d3;
-$linkActiveColor: darken($linkHoverColor, 7%);
-
+$burgerColor: $primary-color;
+$menuBG: #181a19e5;
+$menuListMobile: #3a3d3c;
+$linkColor: $primary-color-light;
 .menu {
   padding: 15px;
   position: fixed;
@@ -58,22 +62,25 @@ $linkActiveColor: darken($linkHoverColor, 7%);
     width: 100%;
     flex-direction: column;
     transform: translate(0, -100%);
-    background: grey;
+    background: $menuListMobile;
   }
   &.open {
     transform: translate(0, 0);
-    padding: 25px 0px 0px 0px;
+    padding: 25px 0px 25px 0px;
   }
 }
 .link {
   padding: 0px 15px;
   color: $linkColor;
   display: block;
-  &:hover {
-    color: $linkHoverColor;
+  transition: all 0.5s;
+  position: relative;
+  span {
+    display: block;
+    transition: all 0.5s;
   }
-  &:active {
-    color: $linkActiveColor;
+  &:hover span {
+    transform: translate(0, -10%);
   }
   &.router-link-active {
     border-bottom: 1px solid $linkColor;

@@ -17,10 +17,10 @@
      display: block;
      position: relative;
      cursor: pointer;
-     background: $noteBG1 url("../assets/img/icons/process.svg") center/cover
+     background: $noteBg url("../assets/img/icons/process.svg") center/cover
        no-repeat;
      &:hover {
-       background-color: lighten($noteBG1, 10%);
+       background-color: lighten($noteBg, 10%);
      }
    }
  }

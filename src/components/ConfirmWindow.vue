@@ -9,7 +9,7 @@
       class="btn"
       type="button"
     >{{button.name}}</button>
-    <button @click="$emit('cancel')" class="btn btn--cancel">Cancel</button>
+    <button @click="$emit('cancel')" class="btn btn--cancel" type="button">Cancel</button>
   </div>
 </template>
 
@@ -33,16 +33,17 @@ export default {
 
 
 <style scoped lang="scss">
+@import "../scss/global/variables.scss";
 /* Variables */
-$windowBG: rgb(49, 49, 49);
+$windowBG: #181a19f5;
 $windowText: #fff;
-$cancelBtnBG: #6c757d;
-$cancelBtnText: #fff;
-$dangerBtnBG: #dc3545;
+$cancelBtnBG: $primary-color;
+$cancelBtnText: $text-color-dark;
+$dangerBtnBG: $danger-color;
 $dangerBtnText: #fff;
 $warningBtnBG: #ffc107;
 $warningBtnText: #212529;
-$successBtnBG: green;
+$successBtnBG: $success-color;
 $successBtnText: white;
 
 .confirmWindow {

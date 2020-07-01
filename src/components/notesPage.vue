@@ -1,12 +1,8 @@
   <template>
-  <div class="notes">
+  <div class="notesPage">
     <header class="header">
       <div class="container">
-        <a @click="addNoteHandler" class="header-add">
-          <svg class="fitImg">
-            <use xlink:href="@/assets/img/sprite.svg#addTodo" />
-          </svg>
-        </a>
+        <icon-btn @clicked="addNoteHandler" hoverEffect="fill" spriteId="add" class="header-add"></icon-btn>
       </div>
     </header>
     <section class="body">
@@ -18,7 +14,7 @@
               @cancel="clearDeletingData"
               text="Confirm remove"
               :buttons="[
-                {name: 'delete', type: 'danger', handler: removeNoteHandler}
+                {name: 'Yes', type: 'danger', handler: removeNoteHandler}
               ]"
             ></confirm-window>
           </transition>
@@ -26,21 +22,31 @@
           <ul class="note-list">
             <li v-for="(value, index) in note.todos" :key="index" class="todo">
               <div class="todo-status">
-                <div class="todo-img">
-                  <img v-if="value.done" class="fitImg" src="@/assets/img/icons/done.svg" alt />
-                  <img else class="fitImg" src="@/assets/img/icons/process.svg" alt />
-                </div>
+                <img
+                  v-if="value.done"
+                  class="fitImg"
+                  style="transform: scale(1.1) translate(1px,0)"
+                  src="@/assets/img/icons/checked.svg"
+                  alt
+                />
+                <img v-else class="fitImg" src="@/assets/img/icons/process.svg" alt />
               </div>
               <p class="todo-text">{{value.text}}</p>
             </li>
           </ul>
           <div class="note-menu">
-            <button @click="setEditingNote(note)" class="note-menu-item">
-              <img src="@/assets/img/icons/edit.svg" alt="edit" class="fitImg" />
-            </button>
-            <button @click="setDeletingNote(note)" class="note-menu-item note-menu-item--remove">
-              <img src="@/assets/img/icons/remove.svg" alt="remove" class="fitImg" />
-            </button>
+            <icon-btn
+              @clicked="setEditingNote(note)"
+              hoverEffect="fill"
+              spriteId="edit"
+              class="note-menu-item"
+            ></icon-btn>
+            <icon-btn
+              @clicked="setDeletingNote(note)"
+              hoverEffect="fill"
+              spriteId="remove"
+              class="note-menu-item"
+            ></icon-btn>
           </div>
         </li>
       </ul>
@@ -57,10 +63,12 @@ import { mapMutations } from "vuex";
 import { mapActions } from "vuex";
 import ConfirmWindow from "./ConfirmWindow";
 import OpenNote from "./OpenNote";
+import IconBtn from "./IconBtn";
 export default {
   components: {
     ConfirmWindow,
-    OpenNote
+    OpenNote,
+    IconBtn
   },
   data() {
     return {};
@@ -101,8 +109,15 @@ export default {
 @import "../scss/global/variables.scss";
 @import "../scss/global/mixins.scss";
 
-.notes {
+$notesPageBg: $primary-color-light;
+$noteBgColor: $noteBgGradient;
+$noteHeaderBgColor: $noteHeaderBg;
+$addBtnFill: $primary-color-dark;
+$addBtnFillHover: $divider-color;
+
+.notesPage {
   padding: 50px 0px 0px 0px;
+  background-color: $notesPageBg;
 }
 .header {
   padding: 15px 0px;
@@ -111,21 +126,21 @@ export default {
     position: relative;
     width: 50px;
     height: 50px;
-    border-radius: 50%;
-    display: block;
-    cursor: pointer;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    svg {
+      fill: $addBtnFill;
+    }
     &:hover {
       svg {
-        fill: darken($hoverLink, 10%);
+        fill: $addBtnFillHover;
       }
     }
     &:active {
       svg {
-        fill: darken($hoverLink, 20%);
+        fill: darken($addBtnFillHover, 20%);
       }
-    }
-    svg {
-      fill: rgb(75, 72, 72);
     }
   }
 }
@@ -139,33 +154,24 @@ export default {
 .note {
   position: relative;
   overflow: hidden;
-  background: transparent url("../assets/img/note1.png") center/contain
-    no-repeat;
-  padding: 15px 15px 15px 20px;
+  background: $noteBgColor;
   border-radius: 1px;
+  padding: 0;
   &:hover {
     .note-menu {
       display: block;
     }
   }
-  &:nth-child(3n) {
-    background: transparent url("../assets/img/note1.png") center/contain
-      no-repeat;
-  }
-  &:nth-child(3n + 1) {
-    background: transparent url("../assets/img/note2.png") center/contain
-      no-repeat;
-  }
-  &:nth-child(3n-1) {
-    background: transparent url("../assets/img/note3.png") center/contain
-      no-repeat;
-  }
+}
+.note-list {
+  padding: 15px;
 }
 .note-title {
   font-size: 30px;
   text-align: center;
   height: 45px;
-  line-height: 1;
+  line-height: 45px;
+  background-color: $noteHeaderBgColor;
 }
 .note-menu {
   position: absolute;
@@ -176,25 +182,12 @@ export default {
   border-radius: 0 0 0 5px;
 }
 .note-menu-item {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  margin: 5px;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  img {
-    filter: invert(0.2);
-  }
-  &:hover img {
-    filter: invert(0);
-  }
+  padding: 5px !important;
 }
 .todo {
   display: flex;
 }
-.todo-img {
-  position: relative;
+.todo-status {
   width: 25px;
   height: 25px;
   margin: 0px 5px 5px 0px;

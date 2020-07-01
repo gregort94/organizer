@@ -7,6 +7,7 @@ import notesPage from './components/notesPage'
 import contactsPage from './components/contactsPage'
 
 import {store} from './store'
+
 const routes = [
    {
       path: '/',
