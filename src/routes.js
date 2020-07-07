@@ -3,10 +3,10 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter);
 
-import notesPage from './components/notesPage'
-import contactsPage from './components/contactsPage'
+import notesPage from '@/views/notesPage'
+import contactsPage from '@/views/contactsPage'
 
-import {store} from './store'
+import {store} from '@/store'
 
 const routes = [
    {

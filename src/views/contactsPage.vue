@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import { trimLetters } from "../js/tools";
-import Contact from "./Contact";
-import OpenContact from "./OpenContact";
-import Finder from "./Finder";
-import Letters from "./Letters";
+import { trimLetters } from "@/js/tools";
+import Contact from "@/components/Contact";
+import OpenContact from "@/components/OpenContact";
+import Finder from "@/components/Finder";
+import Letters from "@/components/Letters";
 import { mapGetters } from "vuex";
 export default {
   components: {

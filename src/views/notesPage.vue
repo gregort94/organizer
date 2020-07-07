@@ -61,9 +61,9 @@
 import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 import { mapActions } from "vuex";
-import ConfirmWindow from "./ConfirmWindow";
-import OpenNote from "./OpenNote";
-import IconBtn from "./IconBtn";
+import ConfirmWindow from "@/components/ConfirmWindow";
+import OpenNote from "@/components/OpenNote";
+import IconBtn from "@/components/IconBtn";
 export default {
   components: {
     ConfirmWindow,
@@ -118,6 +118,7 @@ $addBtnFillHover: $divider-color;
 .notesPage {
   padding: 50px 0px 0px 0px;
   background-color: $notesPageBg;
+  min-height: 100vh;
 }
 .header {
   padding: 15px 0px;
